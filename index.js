@@ -20,6 +20,14 @@ app.get('/:marca/:endpoint', (req,res) =>{
 
 }) */
 
+app.get('/', (req, res)=> {
+    res.json({
+        "info": "Esta es el API de desdoblamiento de datos de Woocommerce",
+        "Autor": "Lievant",
+        "El hindú que la programó": "Omar Avalos"
+    })
+})
+
 app.get('/:marca/:end', (req,res) => {
 
 /*     let limite = 400;
@@ -43,4 +51,11 @@ app.get('/:marca/:end', (req,res) => {
 
 app.listen(process.env.PORT || 5000, () =>{
     console.log('DAS RAIC')
+})
+
+app.get('*', (req, res)=>{
+    res.json({
+        "Error": "True",
+        "Info": "La ruta a la que tratas de acceder no existe"
+    })
 })
