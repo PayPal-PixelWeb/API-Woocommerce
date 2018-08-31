@@ -30,19 +30,20 @@ app.get('/', (req, res)=> {
 
 app.get('/:marca/:end', (req,res) => {
 
-/*     let limite = 400;
-    let page = 1;
+    let limite = null;
+    let page = null;
 
     if(req.query.limite){
-        limite = Number(req.query.limite)
+        limite = req.query.limite
+        console.log("limite: ", limite)
     }
-    if(req.query.page){
-        page = req.query.page
-    } */
+    if(req.query.pagina){
+        page = req.query.pagina
+    }
 
     let woo = WooCommerce(req.params.marca);
 
-    woo.getData(req.params.end)
+    woo.getData(req.params.end, limite, page)
         .then((r)=>{
             res.send(r)
         })

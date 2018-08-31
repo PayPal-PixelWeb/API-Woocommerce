@@ -8,8 +8,8 @@ class WooMethods{
         this.opt = opt
     }
 
-    getUrl(endpoint, pagina=1){
-        return `${this.opt.url}/wp-json/${this.opt.version}/${endpoint}?consumer_key=${this.opt.consumerKey}&consumer_secret=${this.opt.consumerSecret}&per_page=100&page=${pagina}`;
+    getUrl(endpoint, offset=0){
+        return `${this.opt.url}/wp-json/${this.opt.version}/${endpoint}?consumer_key=${this.opt.consumerKey}&consumer_secret=${this.opt.consumerSecret}&per_page=100&offset=${offset}`;
     }
 
     getCantidad(end){
@@ -25,33 +25,30 @@ class WooMethods{
         })
     }
 
-    getData(endpoint){
+    getData(endpoint, limite, page){
 
         return new Promise((resolve, reject) => {
 
             const headerData = this.getCantidad(endpoint)
                 .then( r => {
-                    let pagina = 1;
-                    /* let offset;
-                    let iteraciones; */
+                    let offset = 0;
                     let promesas = []
+                    let iteraciones
 
                     if(Number(r.total) > 100){
-/*                         if(page !== undefined ||limite !== undefined ){
-                            pagina = page
-                            offset = page * limite
-                            iteraciones = limite/100
+                        if(page !== null ||limite !== null ){
+                            iteraciones = Number(limite/100)-1
+                            offset = Number(page * limite)
                         }else{
-                            pagina = 1;
                             offset = 0;
                             iteraciones = Number(r.paginas)
-                        } */
+                        }
 
                         console.log(r.paginas)
-                        for(let i=0; i<=Number(r.paginas); i++){
-                            let peticion = rp.get(this.getUrl(endpoint, pagina))
+                        for(let i=0; i<=iteraciones; i++){
+                            let peticion = rp.get(this.getUrl(endpoint, offset))
                             promesas.push(peticion)
-                            pagina ++
+                            offset += 100
                         }
 
                         Promise.all(promesas)
@@ -65,8 +62,9 @@ class WooMethods{
                                 })
 
                                 //SACAR LOS ELEMENTOS DEL ARREGLO
-                                for(let j = 0; j<arregloRes.length; j++){
-                                    for(let k =0; k<=arregloRes[j].length; k++){
+                                console.log(arregloRes.length)
+                                for(let j = 0; j<=arregloRes.length-1; j++){
+                                    for(let k =0; k<=arregloRes[j].length-1; k++){
                                         arr.push(arregloRes[j][k]);
                                     }
                                 }
